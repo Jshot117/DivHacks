@@ -5,6 +5,7 @@ import MapFrame from './MapFrame';
 import DataFrame from './DataFrame';
 
 import Map from './Map';
+import MapControls from './MapControls'
 
 const MainBody = () => {
   
@@ -14,18 +15,13 @@ const MainBody = () => {
         <main>
           <div className="px-4 pt-6">
             <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
-              
-              
               <MapFrame>
-                <Map/>
+                <MapControls/>
+                <div className="my-4 border-gray-200">
+                  <Map/>
+                </div>
               </MapFrame>
-              
-              <DataFrame>
-              
-                
-              </DataFrame>
-              
-              
+              <DataFrame></DataFrame>
             </div>
           </div>
         </main>

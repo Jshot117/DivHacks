@@ -10,7 +10,7 @@ const MapFrame = (props) => {
           <span className="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">{props.title || "Map"}:</span>
         </div>
       </div>
-      <div className="flex items-center justify-between pt-3 mt-4 border-t border-gray-200 sm:pt-6 dark:border-gray-700">
+      <div className="items-center justify-between pt-3 mt-4 border-t border-gray-200 sm:pt-6 dark:border-gray-700">
         {props.children || "Hello world!"}
       </div>
     </div>
