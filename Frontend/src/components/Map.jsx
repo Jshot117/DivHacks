@@ -53,28 +53,17 @@ const Map = () => {
   }
 
   return (
-    <>
-      <MapContainer
-        center={[40.71427, -74.00597]}
-        zoom={13}
-        style={{ height: "100vh", width: "100%" }}
-      >
-        <TileLayer
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        {geoData && <GeoJSON data={geoData} style={getStyle} />}
-        <LocationMarker />
-      </MapContainer>
-      
-      {clickedPosition && (
-        <div style={{ padding: "10px", backgroundColor: "#fff" }}>
-          <h3>Clicked Coordinates:</h3>
-          <p>Latitude: {clickedPosition.lat}</p>
-          <p>Longitude: {clickedPosition.lng}</p>
-        </div>
-      )}
-    </>
+    <MapContainer
+      center={[40.71427, -74.00597]}
+      zoom={100}
+      style={{ height: "100vh", width: "100%" }}
+    >
+      <TileLayer
+        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
+      {geoData && <GeoJSON data={geoData} style={getStyle} />}
+    </MapContainer>
   );
 };
 
