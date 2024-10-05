@@ -1,7 +1,10 @@
 // MainBody.jsx
 
+
 import MapFrame from './MapFrame';
 import DataFrame from './DataFrame';
+
+import Map from './Map';
 
 const MainBody = () => {
   
@@ -14,7 +17,7 @@ const MainBody = () => {
               
               
               <MapFrame>
-                
+                <Map/>
               </MapFrame>
               
               <DataFrame>
