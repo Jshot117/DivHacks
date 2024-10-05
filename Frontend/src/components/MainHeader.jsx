@@ -8,8 +8,8 @@ const MainHeader = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start">
             <a href="/" className="flex ml-2 md:mr-24">
-              <img src="https://flowbite-admin-dashboard.vercel.app/images/logo.svg" className="h-8 mr-3" alt="FlowBite Logo"/>
-              <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Flowbite</span>
+              <img src="https://www.svgrepo.com/show/70289/bike.svg" className="h-8 mr-3 hover:rotate-45 transition" alt="FlowBite Logo"/>
+              <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">BikeLanes DivHacks</span>
             </a>
           </div>
         </div>
