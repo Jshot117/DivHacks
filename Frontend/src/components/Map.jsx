@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, GeoJSON, useMapEvent, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { districtAtLocation } from "../District";
 import { useState, useEffect } from "react";
 
 const Map = () => {
@@ -53,17 +54,29 @@ const Map = () => {
   }
 
   return (
-    <MapContainer
-      center={[40.71427, -74.00597]}
-      zoom={100}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <TileLayer
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {geoData && <GeoJSON data={geoData} style={getStyle} />}
-    </MapContainer>
+    <>
+      <MapContainer
+        center={[40.71427, -74.00597]}
+        zoom={100}
+        style={{ height: "100vh", width: "100%" }}
+      >
+        <TileLayer
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {geoData && <GeoJSON data={geoData} style={getStyle} />}
+        <LocationMarker />
+      </MapContainer>
+      
+      {clickedPosition && (
+        <div style={{ padding: "10px" }}>
+          <h3>Clicked Coordinates:</h3>
+          <p>Latitude: {clickedPosition.lat}</p>
+          <p>Longitude: {clickedPosition.lng}</p>
+          <p>District: {districtAtLocation([clickedPosition.lng, clickedPosition.lat])}</p>
+        </div>
+      )}
+    </>
   );
 };
 
