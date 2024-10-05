@@ -1,9 +1,10 @@
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, useMapEvent, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState, useEffect } from "react";
 
 const Map = () => {
   const [geoData, setGeoData] = useState(null);
+  const [clickedPosition, setClickedPosition] = useState(null);
 
   useEffect(() => {
     fetch("/New York City Bike Routes_20241005.geojson")
@@ -14,6 +15,7 @@ const Map = () => {
       });
   }, []);
 
+  useState(() => { })
   // Define a style function
   const getStyle = (feature) => {
     return {
@@ -42,18 +44,37 @@ const Map = () => {
     }
   };
 
+  function LocationMarker() {
+    useMapEvents({
+      click(e) {
+        setClickedPosition(e.latlng);
+      }
+    })
+  }
+
   return (
-    <MapContainer
-      center={[40.71427, -74.00597]}
-      zoom={13}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <TileLayer
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {geoData && <GeoJSON data={geoData} style={getStyle} />}
-    </MapContainer>
+    <>
+      <MapContainer
+        center={[40.71427, -74.00597]}
+        zoom={13}
+        style={{ height: "100vh", width: "100%" }}
+      >
+        <TileLayer
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {geoData && <GeoJSON data={geoData} style={getStyle} />}
+        <LocationMarker />
+      </MapContainer>
+      
+      {clickedPosition && (
+        <div style={{ padding: "10px", backgroundColor: "#fff" }}>
+          <h3>Clicked Coordinates:</h3>
+          <p>Latitude: {clickedPosition.lat}</p>
+          <p>Longitude: {clickedPosition.lng}</p>
+        </div>
+      )}
+    </>
   );
 };
 
