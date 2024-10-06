@@ -14,9 +14,10 @@ const getRoute = async (req, res) => {
       .json({ error: "Origin and destination are required" });
   }
 
-  let originData = origin;
-  let destinationData = destination;
+  let originData = null;
+  let destinationData = null;
 
+  //set origin and destination data based on whether the input is a coordinate or location
   if (!coordinateRegex.test(origin)) {
     originData = await getCoordinates(origin);
     destinationData = await getCoordinates(destination);
@@ -24,6 +25,15 @@ const getRoute = async (req, res) => {
     if (!originData || !destinationData) {
       return res.status(500).json({ error: "Error fetching coordinates" });
     }
+  } else {
+    originData = {
+      data: [{ lat: origin.split(",")[0], lon: origin.split(",")[1] }],
+    };
+    destinationData = {
+      data: [
+        { lat: destination.split(",")[0], lon: destination.split(",")[1] },
+      ],
+    };
   }
 
   const geoJson = await getGeoJson(
