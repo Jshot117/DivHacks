@@ -15,7 +15,17 @@ const DataContainer = (props) => {
 };
 
 const DataFrame = (props) => {
-  
+  const {districtSelected} = props.mapInputs;
+
+  // No council member for assembly district 85
+  // https://nyassembly.gov/mem/?ad=085
+  let headshot = undefined;
+  if (districtSelected !== undefined && districtSelected != 85) {
+    headshot = (
+      <img src={`/council_headshots/district-${districtSelected}.png`}></img>
+    );
+  }
+
   return (
   
     <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
@@ -24,6 +34,7 @@ const DataFrame = (props) => {
           <span className="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">{props.title || "Data"}:</span>
         </div>
       </div>
+      {headshot}
       <DataContainer>
         <PieChart title="Money Wasted" data={[
           25, 24, 22

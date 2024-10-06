@@ -4,12 +4,12 @@ import "leaflet/dist/leaflet.css";
 import { districtAtLocation, districtBoundaries } from "../District";
 import MapEventHandler from "./MapEventHandler"; 
 
-const Map = () => {
+const Map = ({inputCallback}) => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
   const [visibleData, setVisibleData] = useState(null);
 
-  const displayDistrict = useMemo(
+  const districtSelected = useMemo(
     () =>
       clickedPosition !== null
         ? districtAtLocation([clickedPosition.lng, clickedPosition.lat])
@@ -19,12 +19,13 @@ const Map = () => {
 
   const displayDistrictGeoJSON = useMemo(
     () =>
-      displayDistrict !== undefined
-        ? districtBoundaries["" + displayDistrict]
-        : undefined,
-    [displayDistrict]
+      districtSelected !== undefined
+    ? districtBoundaries["" + districtSelected]
+    : undefined,
+    [districtSelected]
   );
 
+  useMemo(() => inputCallback({districtSelected}), [districtSelected]);
   useEffect(() => {
     fetch("/New York City Bike Routes_20241005.json")
       .then((res) => res.json())
@@ -98,7 +99,7 @@ const Map = () => {
         {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
         {displayDistrictGeoJSON && (
           <GeoJSON
-            key={displayDistrict}
+            key={districtSelected}
             data={displayDistrictGeoJSON}
             style={getDisplayDistrictStyle}
           />
@@ -111,7 +112,7 @@ const Map = () => {
           <h3>Clicked Coordinates:</h3>
           <p>Latitude: {clickedPosition.lat}</p>
           <p>Longitude: {clickedPosition.lng}</p>
-          <p>District: {displayDistrict}</p>
+          <p>District: {districtSelected}</p>
         </div>
       )}
     </>

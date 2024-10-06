@@ -6,9 +6,11 @@ import DataFrame from './DataFrame';
 
 import Map from './Map';
 import MapControls from './MapControls'
+import { useState } from 'react';
 
 const MainBody = () => {
-  
+  const [mapInputs, setMapInputs] = useState({districtSelected: undefined});
+
   return (
     <div className="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900 dark:text-white">
       <div id="main-content" className="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
@@ -18,10 +20,10 @@ const MainBody = () => {
               <MapFrame>
                 <MapControls/>
                 <div className="my-4 border-gray-200">
-                  <Map/>
+                  <Map inputCallback={setMapInputs}/>
                 </div>
               </MapFrame>
-              <DataFrame></DataFrame>
+              <DataFrame mapInputs={mapInputs}></DataFrame>
             </div>
           </div>
         </main>
