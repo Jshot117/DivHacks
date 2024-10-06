@@ -3,7 +3,7 @@
 const RandomBackground = () => {
   
   return (
-    <div className="absolute z-20 top-0 inset-x-0 flex justify-center overflow-hidden pointer-events-none">
+    <div className="fixed z-20 top-0 inset-x-0 flex justify-center overflow-hidden pointer-events-none">
       <div className="w-[108rem] flex-none flex justify-end">
         <picture>
           <source srcSet="https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif" type="image/avif"/>

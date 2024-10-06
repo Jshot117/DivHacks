@@ -1,4 +1,19 @@
 // DataFrame.jsx
+
+import AreaChart from './charts/AreaChart'
+import PieChart from './charts/PieChart'
+
+const DataContainer = (props) => {
+  
+  return (
+    <div className="flex items-center justify-between pt-3 mt-5 border-t border-gray-200 sm:pt-6 dark:border-gray-700">
+        {props.children || "Hello world!"}
+        
+      </div>
+  );
+  
+};
+
 const DataFrame = (props) => {
   
   return (
@@ -9,10 +24,12 @@ const DataFrame = (props) => {
           <span className="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">{props.title || "Data"}:</span>
         </div>
       </div>
-      <div className="flex items-center justify-between pt-3 mt-5 border-t border-gray-200 sm:pt-6 dark:border-gray-700">
-        {props.children || "Hello world!"}
-        
-      </div>
+      <DataContainer>
+        <PieChart/>
+      </DataContainer>
+      <DataContainer>
+        <AreaChart/>
+      </DataContainer>
     </div>  
     
   );
