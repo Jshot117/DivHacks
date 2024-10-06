@@ -10,7 +10,10 @@ fetch("/district_boundaries.geojson").then(res => res.json()).then(dj => {
     }
 });
 
+fetch("/council_names/assembly_members.json").then(res => res.json()).then(am => districtsRepsJson = am);
+
 export let districtBoundaries: { [district: string]: d3.GeoGeometryObjects } | undefined = undefined;
+export let districtsRepsJson: { [district: string]: {name: string, email: string, address_info: string} } = undefined as any;
 
 export function districtAtLocation(point: [number, number]): number | undefined {
     console.log(districtsJson?.features.map(e => e.geometry));

@@ -2,6 +2,7 @@
 
 import AreaChart from './charts/AreaChart'
 import PieChart from './charts/PieChart'
+import { districtsRepsJson } from '../District';
 
 const DataContainer = (props) => {
   
@@ -15,13 +16,17 @@ const DataContainer = (props) => {
 };
 
 const DataCouncilCard = (props) => {
-  
+  const district = props.district;
+  const rep = districtsRepsJson["" + district];
+  const {name, email, address_info} = rep;
+
   return (
     <div className="flex items-center gap-x-6">
       <img alt="" src={props.imageUrl} className="h-32 rounded-full dark:bg-gray-600 dark:text-white rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500" />
       <div>
-        <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900 dark:text-white">District Assembler: {props.name}</h3>
-        <p className="text-sm font-semibold leading-6 text-indigo-600">Contact: {props.role}</p>
+        <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900 dark:text-white">District Assembler: {name}</h3>
+        <p className="text-sm font-semibold leading-6 text-indigo-600">Contact: {email}</p>
+        {/* <p className="text-sm font-semibold leading-6 text-indigo-600">{address_info}</p> */}
       </div>
     </div>  
   );
@@ -49,7 +54,7 @@ const DataFrame = (props) => {
       
       { headshot ? (
         <DataContainer>
-          <DataCouncilCard imageUrl={headshot} name={"Bob Marley"} role={"+1 (234) 567-8910"}/>
+          <DataCouncilCard district={districtSelected} imageUrl={headshot}/>
         </DataContainer>
       ) : "" }
       
