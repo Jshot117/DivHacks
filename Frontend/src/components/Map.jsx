@@ -106,6 +106,7 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, clickCallback, ori
       <MapContainer
         center={[40.71427, -74.00597]}
         zoom={13}
+        zoomSnap={0.3}
         preferCanvas={true}
         style={{ height: "44vh", width: "100%" }}
       >
