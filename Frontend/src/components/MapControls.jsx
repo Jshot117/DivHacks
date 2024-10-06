@@ -2,7 +2,7 @@ import { useState } from "react";
 // MapControls.jsx
 
 const MapControls = ({
-  origin, setOriginPoint, destination, setDestinationPoint, callback, clickCounter, setClickCounter
+  origin, setOriginPoint, destination, setDestinationPoint, setFocusedInput, callback, clickCounter, setClickCounter
 }) => {
   
   const getData = async function() {
@@ -40,32 +40,24 @@ const MapControls = ({
         <div className="sm:col-span-3">
           <label htmlFor="starting-point" className="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Origin</label>
           <div className="">
-            <input type="text" name="starting-point" id="starting-point" autoComplete="given-name" className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={origin} onClick={()=>{
-              
-              setClickCounter(clickCounter == 1 ? 0 : 1);
-              
-            }} onChange={(e) => {
-          
-              
-              setOriginPoint(e.target.value);
-              
-            }}/>
+            <input type="text" name="starting-point" id="starting-point" autoComplete="given-name" defaultValue={origin}
+              className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              onFocus={() => setFocusedInput("origin")}
+              onBlur={(e) => setFocusedInput(e?.relatedTarget?.classList?.contains("leaflet-container") ? "origin" : undefined)}
+              onChange={(e) => setOriginPoint(e.target.value)}
+            />
           </div>
         </div>
       
         <div className="sm:col-span-3">
           <label htmlFor="ending-point" className="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Destination</label>
           <div className="">
-            <input type="text" name="ending-point" id="ending-point" autoComplete="family-name" className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={destination} onClick={()=>{
-              
-              setClickCounter(clickCounter == 2 ? 0 : 2);
-              
-            }} onChange={(e) => {
-          
-              
-              setDestinationPoint(e.target.value);
-              
-            }}/>
+            <input type="text" name="ending-point" id="ending-point" autoComplete="family-name" defaultValue={destination}
+              className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              onFocus={() => setFocusedInput("destination")}
+              onBlur={(e) => setFocusedInput(e?.relatedTarget?.classList?.contains("leaflet-container") ? "destination" : undefined)}
+              onChange={(e) => setDestinationPoint(e.target.value)}
+            />
           </div>
         </div>
       </div>

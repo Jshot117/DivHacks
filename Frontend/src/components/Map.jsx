@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { districtAtLocation, districtBoundaries } from "../District";
 import MapEventHandler from "./MapEventHandler"; 
 
-const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginPoint, destination, setDestinationPoint, clickCounter, setClickCounter}) => {
+const Map = ({inputCallback, plannedRoute, plannedRouteQuery, clickCallback, origin, destination}) => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
   const [visibleData, setVisibleData] = useState(null);
@@ -25,7 +25,7 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
     [districtSelected]
   );
 
-  useMemo(() => inputCallback({districtSelected}), [districtSelected]);
+  useMemo(() => inputCallback({districtSelected, clickedPosition}), [districtSelected, clickedPosition]);
   useEffect(() => {
     fetch("/New York City Bike Routes_20241005.json")
       .then((res) => res.json())
@@ -89,25 +89,13 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
   function LocationMarker() {
     useMapEvents({
       click(e) {
-        
         console.log("Map.jsx[LocationMarker]:", JSON.stringify(e.latlng));
         
-        if (clickCounter == 1) {
-          setOriginPoint(e.latlng.lat.toString() + "," + e.latlng.lng.toString());
-          // setDestinationPoint(null);
-        } else if (clickCounter == 2) {
-          setDestinationPoint(e.latlng.lat.toString() + "," + e.latlng.lng.toString())
-        } else if (clickCounter == 0) {
-          
+        if (clickCallback !== undefined) {
+          clickCallback(e.latlng);
+        } else {
           setClickedPosition(e.latlng);
-          
         }
-        
-        // setClickCounter((clickCounter + 1) % 2);
-        
-        
-        
-        
       },
     });
     return null;
@@ -125,8 +113,8 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
-        {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
         {plannedRoute && plannedRoute.route.routes.length && <GeoJSONLayer key={plannedRouteQuery} data={plannedRoute.route.routes[0].geometry} style={getPlannedRouteStyle} />}
+        {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
         {displayDistrictGeoJSON && (
           <GeoJSON
             key={districtSelected}

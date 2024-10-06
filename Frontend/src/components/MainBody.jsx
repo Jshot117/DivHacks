@@ -6,23 +6,17 @@ import DataFrame from './DataFrame';
 
 import Map from './Map';
 import MapControls from './MapControls'
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const MainBody = () => {
-  const [mapInputs, setMapInputs] = useState({districtSelected: undefined});
+  const [mapInputs, setMapInputs] = useState({districtSelected: undefined, clickedPosition: undefined});
   const [plannedRoute, setPlannedRoute] = useState(undefined);
   const [plannedRouteQuery, setPlannedRouteQuery] = useState(undefined);
 
-
-  const [clickCounter, setClickCounter] = useState(0);
-  // enumeration definition: 
-  //   0: None
-  //   1: Origin
-  //   2: Destination
-  
+  const [focusedInput, setFocusedInput] = useState(undefined);
   const [origin, setOriginPoint] = useState(null);
   const [destination, setDestinationPoint] = useState(null);
-  
+
   return (
     <div className="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900 dark:text-white">
       <div id="main-content" className="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
@@ -31,11 +25,23 @@ const MainBody = () => {
             <div className="grid gap-4 l:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
               <MapFrame>
                 <MapControls callback={(route, origin, dest) => {
-                  setPlannedRoute(route);
-                  setPlannedRouteQuery(origin && dest ? (origin + dest) : undefined);
-                }} origin={origin} setOriginPoint={setOriginPoint} destination={destination} setDestinationPoint={setDestinationPoint} clickCounter={clickCounter} setClickCounter={setClickCounter}/>
+                    setPlannedRoute(route);
+                    setPlannedRouteQuery(origin && dest ? (origin + dest) : undefined);
+                  }}
+                  setFocusedInput={setFocusedInput}
+                  origin={origin} setOriginPoint={setOriginPoint} destination={destination} setDestinationPoint={setDestinationPoint}
+                />
                 <div className="my-4 border-gray-200">
-                  <Map inputCallback={setMapInputs} plannedRoute={plannedRoute} plannedRouteQuery={plannedRouteQuery} origin={origin} setOriginPoint={setOriginPoint} destination={destination} setDestinationPoint={setDestinationPoint} clickCounter={clickCounter} setClickCounter={setClickCounter}/>
+                  <Map clickCallback={
+                    focusedInput !== undefined ? (clickedPosition) => {
+                      if (focusedInput === "origin") {
+                        setOriginPoint([clickedPosition.lat, clickedPosition.lng]);
+                      } else if (focusedInput === "destination") {
+                        setDestinationPoint([clickedPosition.lat, clickedPosition.lng]);
+                      }
+                      setFocusedInput(undefined); 
+                    } : undefined
+                  } inputCallback={setMapInputs} plannedRoute={plannedRoute} plannedRouteQuery={plannedRouteQuery} origin={origin} destination={destination}/>
                 </div>
               </MapFrame>
               <DataFrame mapInputs={mapInputs}></DataFrame>
