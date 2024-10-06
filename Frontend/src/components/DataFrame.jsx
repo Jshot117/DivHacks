@@ -46,7 +46,7 @@ Sincerely,
     <div className="flex items-center w-full">
       <img alt="" src={imageUrl} className="h-32 dark:bg-gray-600 dark:text-white rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500" />
       <div className="w-full ml-4">
-        <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900 dark:text-white">District Assembler: {name}</h3>
+        <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900 dark:text-white">District Assembly Member: {name}</h3>
         <p className="text-sm font-semibold leading-6 text-indigo-600">Contact: {email}</p>
         {/* <p className="text-sm font-semibold leading-6 text-indigo-600">{address_info}</p> */}
         
