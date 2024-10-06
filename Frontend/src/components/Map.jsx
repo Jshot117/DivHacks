@@ -1,26 +1,29 @@
-import React, { useState, useEffect, useMemo , useCallback } from "react";
-import { MapContainer, TileLayer, GeoJSON, useMap, useMapEvents } from "react-leaflet";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { MapContainer, TileLayer, GeoJSON, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { districtAtLocation, districtBoundaries } from "../District";
+import MapEventHandler from "./MapEventHandler"; 
 
 const Map = () => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
+  const [visibleData, setVisibleData] = useState(null);
+
   const displayDistrict = useMemo(
     () =>
       clickedPosition !== null
-    ? districtAtLocation([clickedPosition.lng, clickedPosition.lat])
-    : undefined,
+        ? districtAtLocation([clickedPosition.lng, clickedPosition.lat])
+        : undefined,
     [clickedPosition]
   );
+
   const displayDistrictGeoJSON = useMemo(
     () =>
       displayDistrict !== undefined
-    ? districtBoundaries["" + displayDistrict]
-    : undefined,
+        ? districtBoundaries["" + displayDistrict]
+        : undefined,
     [displayDistrict]
   );
-  const [visibleData, setVisibleData] = useState(null);
 
   useEffect(() => {
     fetch("/New York City Bike Routes_20241005.json")
@@ -30,6 +33,7 @@ const Map = () => {
         setGeoData(data);
       });
   }, []);
+
   const getBikeLaneStyle = useCallback(
     (feature) => ({
       color: getBikeRouteColor(feature.properties.boro),
@@ -40,16 +44,6 @@ const Map = () => {
     []
   );
 
-  const getDisplayDistrictStyle = (feature) => {
-    return {
-      color: "#0000FF",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 1,
-    };
-  };
-
-  // Define a function to get color based on a property
   const getBikeRouteColor = (boro) => {
     switch (boro) {
       case "1":
@@ -67,48 +61,18 @@ const Map = () => {
     }
   };
 
+  const getDisplayDistrictStyle = useCallback(() => {
+    return {
+      color: "#0000FF",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 1,
+    };
+  }, []);
+
   const GeoJSONLayer = React.memo(({ data, style }) => {
     return <GeoJSON data={data} style={style} />;
   });
-
-  function MapEventHandler() {
-    const map = useMap();
-
-    useEffect(() => {
-      if (!geoData) return;
-
-      const updateVisibleData = () => {
-        const bounds = map.getBounds();
-
-        const filteredFeatures = geoData.features.filter((feature) => {
-          const coordinates = feature.geometry.coordinates;
-          // Handle different geometry types
-          if (feature.geometry.type === "LineString") {
-            return coordinates.some((coord) => bounds.contains([coord[1], coord[0]]));
-          } else if (feature.geometry.type === "MultiLineString") {
-            return coordinates.some((line) =>
-              line.some((coord) => bounds.contains([coord[1], coord[0]]))
-            );
-          }
-          return false;
-        });
-
-        setVisibleData({
-          type: "FeatureCollection",
-          features: filteredFeatures,
-        });
-      };
-
-      updateVisibleData(); // Initial load
-      map.on("moveend", updateVisibleData); // Update on map move
-
-      return () => {
-        map.off("moveend", updateVisibleData);
-      };
-    }, [geoData, map]);
-
-    return null; // This component doesn't render anything visible
-  }
 
   function LocationMarker() {
     useMapEvents({
@@ -116,6 +80,7 @@ const Map = () => {
         setClickedPosition(e.latlng);
       },
     });
+    return null;
   }
 
   return (
@@ -128,7 +93,7 @@ const Map = () => {
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution="&copy; OpenStreetMap contributors"
         />
         {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
         {displayDistrictGeoJSON && (
@@ -139,7 +104,7 @@ const Map = () => {
           />
         )}
         <LocationMarker />
-        <MapEventHandler />
+        <MapEventHandler geoData={geoData} setVisibleData={setVisibleData} />
       </MapContainer>
       {clickedPosition && (
         <div style={{ padding: "10px" }}>
