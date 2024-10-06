@@ -31,7 +31,7 @@ const getRoute = async (req, res) => {
     return res.status(500).json({ error: "Error fetching coordinates" });
   }
 
-  if (originData.length === 0 || destinationData.length === 0) {
+  if (originData.data.length === 0 || destinationData.data.length === 0) {
     return res.status(404).json({ error: "Location not found" });
   }
 
@@ -44,11 +44,11 @@ const getRoute = async (req, res) => {
     return res.status(500).json({ error: "Error fetching route" });
   }
 
-  return {
+  return res.json({
     origin: originData.data,
     destination: destinationData.data,
     route: geoJson.data,
-  };
+  });
 };
 
 module.exports = { getRoute };
