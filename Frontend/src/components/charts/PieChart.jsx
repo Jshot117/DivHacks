@@ -72,7 +72,7 @@ function PieChart(props) {
         show: false,
       }
     },
-    series: [52.8, 26.8, 20.4],
+    series: props.data || [52.8, 26.8, 20.4],
     colors: ["#1C64F2", "#16BDCA", "#9061F9"]
     
   };

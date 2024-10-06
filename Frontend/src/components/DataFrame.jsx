@@ -4,6 +4,8 @@ import AreaChart from './charts/AreaChart'
 import PieChart from './charts/PieChart'
 import { districtsRepsJson } from '../District';
 
+import { useState } from 'react';
+
 const DataContainer = (props) => {
   
   return (
@@ -15,20 +17,51 @@ const DataContainer = (props) => {
   
 };
 
-const DataCouncilCard = ({district, imageUrl}) => {
+const DataCouncilCard = ({district, imageUrl, emailText, setEmailText}) => {
   const rep = districtsRepsJson["" + district];
   const {name, email, address_info} = rep;
+  
+  if (!emailText.includes(name)) {
+    
+    setEmailText(`Dear ${name},
 
+I hope this message finds you well. I am writing to bring attention to a pressing concern in our community and the need for more bike lanes throughout our district. As a resident of New York City, I have noticed that cycling, while a popular and eco-friendly mode of transportation, often presents safety challenges due to the limited availability of designated bike lanes.
+
+Expanding the network of bike lanes would greatly benefit the district by%3A
+- Ensuring safer roads for cyclists and reducing the risk of accidents.
+- Encouraging more residents to choose biking as a sustainable, healthy transportation option.
+- Reducing traffic congestion, especially during peak commuting hours.
+- Promoting greener, more environmentally friendly alternatives to driving.
+
+Many of my fellow community members share these sentiments, and I am gathering signatures to show the broad support for this initiative. I would be happy to discuss this in more detail and explore any opportunities to collaborate with your office to make our streets safer and more accessible for everyone.
+
+Thank you for your time and attention to this matter. I look forward to your response.
+
+Sincerely,
+[Your Name]`);
+    
+  }
+  
   return (
-    <div className="flex items-center gap-x-6">
+    <div className="flex items-center w-full">
       <img alt="" src={imageUrl} className="h-32 dark:bg-gray-600 dark:text-white rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500" />
-      <div>
+      <div className="w-full ml-4">
         <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900 dark:text-white">District Assembler: {name}</h3>
         <p className="text-sm font-semibold leading-6 text-indigo-600">Contact: {email}</p>
         {/* <p className="text-sm font-semibold leading-6 text-indigo-600">{address_info}</p> */}
+        
+        <textarea className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={emailText} onChange={(e) => {
+          
+          setEmailText(e.target.value);
+          
+        }}></textarea>
+        
         <a 
-          href={`mailto:${email}?subject=Petition%20for%20Expanding%20Bike%20Lanes%20in%20Our%20District&body=Dear%20${name}%2C%0D%0A%0D%0AI%20hope%20this%20message%20finds%20you%20well.%20I%20am%20writing%20to%20bring%20attention%20to%20a%20pressing%20concern%20in%20our%20community%3A%20the%20need%20for%20more%20bike%20lanes%20throughout%20our%20district.%20As%20a%20resident%20of%20New%20York%20City%2C%20I%20have%20noticed%20that%20cycling%2C%20while%20a%20popular%20and%20eco-friendly%20mode%20of%20transportation%2C%20often%20presents%20safety%20challenges%20due%20to%20the%20limited%20availability%20of%20designated%20bike%20lanes.%0D%0A%0D%0AExpanding%20the%20network%20of%20bike%20lanes%20would%20greatly%20benefit%20the%20district%20by%3A%0D%0A-%20Ensuring%20safer%20roads%20for%20cyclists%20and%20reducing%20the%20risk%20of%20accidents.%0D%0A-%20Encouraging%20more%20residents%20to%20choose%20biking%20as%20a%20sustainable%2C%20healthy%20transportation%20option.%0D%0A-%20Reducing%20traffic%20congestion%2C%20especially%20during%20peak%20commuting%20hours.%0D%0A-%20Promoting%20greener%2C%20more%20environmentally%20friendly%20alternatives%20to%20driving.%0D%0A%0D%0AMany%20of%20my%20fellow%20community%20members%20share%20these%20sentiments%2C%20and%20I%20am%20gathering%20signatures%20to%20show%20the%20broad%20support%20for%20this%20initiative.%20I%20would%20be%20happy%20to%20discuss%20this%20in%20more%20detail%20and%20explore%20any%20opportunities%20to%20collaborate%20with%20your%20office%20to%20make%20our%20streets%20safer%20and%20more%20accessible%20for%20everyone.%0D%0A%0D%0AThank%20you%20for%20your%20time%20and%20attention%20to%20this%20matter.%20I%20look%20forward%20to%20your%20response.%0D%0A%0D%0ASincerely%2C%0D%0A%5BYour%20Name%5D`}
-          className = "text-sm font-semibold leading-6 text-indigo-600 border-b-2 border-indigo-600 hover:border-indigo-400 hover:text-indigo-400"
+          href={"mailto:" + email + new URLSearchParams({
+            body: emailText,
+            subject: "Petition for Expanding Bike Lanes in Our District"
+          }).toString()}
+          className = "bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px-6 rounded-lg w-full flex items-center justify-center mt-4 dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400 "
         >Send Email</a>
 
       </div>
@@ -40,11 +73,15 @@ const DataCouncilCard = ({district, imageUrl}) => {
 const DataFrame = (props) => {
   const {districtSelected} = props.mapInputs;
 
+  const [emailText, setEmailText] = useState("");
+
   // No council member for assembly district 85
   // https://nyassembly.gov/mem/?ad=085
   let headshot = undefined;
   if (districtSelected !== undefined && districtSelected != 85) {
     headshot = (`/council_headshots/district-${districtSelected}.png`);
+    
+    
   }
 
   return (
@@ -58,20 +95,20 @@ const DataFrame = (props) => {
       
       { headshot ? (
         <DataContainer>
-          <DataCouncilCard district={districtSelected} imageUrl={headshot}/>
+          <DataCouncilCard emailText={emailText} setEmailText={setEmailText} district={districtSelected} imageUrl={headshot}/>
         </DataContainer>
       ) : "" }
+      <DataContainer>
+        <AreaChart title="Money Saved From Traveling by Bike" keyData={"200$"} data={[
+          192, 167, 152, 141, 115
+        ]}/>
+      </DataContainer>
+      <DataContainer>
+        <PieChart title="CO2 Emissions Contributions After A Month" keyData={"-97%"} data={[
+          200, 192, 167, 152, 141, 115, 92, 85, 72, 43
+        ]}/>
+      </DataContainer>
       
-      <DataContainer>
-        <PieChart title="Money Wasted" data={[
-          25, 24, 22
-        ]}/>
-      </DataContainer>
-      <DataContainer>
-        <AreaChart title="Money Saved" data={[
-          25, 24, 22
-        ]}/>
-      </DataContainer>
     </div>  
     
   );

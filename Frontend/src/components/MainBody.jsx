@@ -49,7 +49,7 @@ const MainBody = () => {
           </div>
         </main>
         <p className="my-10 text-sm text-center text-gray-500">
-            © 2024 <a href="" className="hover:underline" target="_blank">DivHacks</a>. All rights reserved.
+            © 2024 Cycle My NYC (<a href="" className="hover:underline" target="_blank">DivHacks</a>). All rights reserved.
         </p>
       </div>
     </div>
