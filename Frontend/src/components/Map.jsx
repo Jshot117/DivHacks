@@ -107,7 +107,7 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, clickCallback, ori
         center={[40.71427, -74.00597]}
         zoom={13}
         preferCanvas={true}
-        style={{ height: "50vh", width: "100%" }}
+        style={{ height: "44vh", width: "100%" }}
       >
         <TileLayer
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png"

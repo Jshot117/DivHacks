@@ -66,7 +66,7 @@ const MapControls = ({
         getData();
         
       }}>
-        Get Distance
+        Get Directions
       </button>
     </div>
     
