@@ -31,6 +31,10 @@ const getRoute = async (req, res) => {
     return res.status(500).json({ error: "Error fetching coordinates" });
   }
 
+  if (origin.data.length === 0 || destination.data.length === 0) {
+    return res.status(404).json({ error: "Location not found" });
+  }
+
   const geoJson = await getGeoJson(
     [originData.data[0].lat, originData.data[0].lon],
     [destinationData.data[0].lat, destinationData.data[0].lon]
