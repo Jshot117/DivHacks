@@ -35,8 +35,8 @@ function PieChart(props) {
       fill: {
         type: "gradient",
         gradient: {
-          opacityFrom: 0.55,
-          opacityTo: 0,
+          opacityFrom: 1,
+          opacityTo: 0.76,
           shade: "#1C64F2",
           gradientToColors: ["#1C64F2"],
         },

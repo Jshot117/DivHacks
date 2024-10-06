@@ -14,7 +14,7 @@ const MainBody = () => {
       <div id="main-content" className="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <main>
           <div className="px-4 pt-6">
-            <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid gap-4 grid-cols-2">
               <MapFrame>
                 <MapControls/>
                 <div className="my-4 border-gray-200">
