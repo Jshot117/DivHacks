@@ -16,6 +16,39 @@ npm start
 
 The server should now be running and accessible at `http://localhost:3000`.
 
+
+## Sample API Call
+
+To test the API, you can use the following example:
+
+### Get directions 
+
+Fetch using location name:
+```
+http://localhost:3000/api?origin=CUNY Queens College&destination=Columbia University
+```
+
+Fetch using coordinates:
+```
+http://localhost:3000/api?origin=40.737004,-73.8251979&destination=40.737004,-73.96161411567529
+```
+
+Fetch using mixed mode:
+```
+http://localhost:3000/api?origin=CUNY Queens College&destination=40.737004,-73.96161411567529
+```
+### Response
+
+A successful response will look like this:
+```json
+{
+  "id": 1,
+  "name": "NewItem",
+  "description": "This is a new item."
+}
+```
+
+
 ## Troubleshooting
 
 If you encounter any issues, check the following:
