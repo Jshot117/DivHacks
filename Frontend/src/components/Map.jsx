@@ -1,14 +1,15 @@
-import { MapContainer, TileLayer, GeoJSON, useMapEvent, useMapEvents } from "react-leaflet";
+import React, { useState, useEffect, useCallback } from "react";
+import { MapContainer, TileLayer, GeoJSON, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { districtAtLocation } from "../District";
-import { useState, useEffect } from "react";
 
 const Map = () => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
+  const [visibleData, setVisibleData] = useState(null);
 
   useEffect(() => {
-    fetch("/New York City Bike Routes_20241005.geojson")
+    fetch("/New York City Bike Routes_20241005.json")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -16,18 +17,16 @@ const Map = () => {
       });
   }, []);
 
-  useState(() => { })
-  // Define a style function
-  const getStyle = (feature) => {
-    return {
+  const getStyle = useCallback(
+    (feature) => ({
       color: getColor(feature.properties.boro),
       weight: 2,
       opacity: 1,
       fillOpacity: 0.7,
-    };
-  };
+    }),
+    []
+  );
 
-  // Define a function to get color based on a property
   const getColor = (boro) => {
     switch (boro) {
       case "1":
@@ -45,29 +44,74 @@ const Map = () => {
     }
   };
 
+  const GeoJSONLayer = React.memo(({ data, style }) => {
+    return <GeoJSON data={data} style={style} />;
+  });
+
+  function MapEventHandler() {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!geoData) return;
+
+      const updateVisibleData = () => {
+        const bounds = map.getBounds();
+
+        const filteredFeatures = geoData.features.filter((feature) => {
+          const coordinates = feature.geometry.coordinates;
+          // Handle different geometry types
+          if (feature.geometry.type === "LineString") {
+            return coordinates.some((coord) => bounds.contains([coord[1], coord[0]]));
+          } else if (feature.geometry.type === "MultiLineString") {
+            return coordinates.some((line) =>
+              line.some((coord) => bounds.contains([coord[1], coord[0]]))
+            );
+          }
+          return false;
+        });
+
+        setVisibleData({
+          type: "FeatureCollection",
+          features: filteredFeatures,
+        });
+      };
+
+      updateVisibleData(); // Initial load
+      map.on("moveend", updateVisibleData); // Update on map move
+
+      return () => {
+        map.off("moveend", updateVisibleData);
+      };
+    }, [geoData, map]);
+
+    return null; // This component doesn't render anything visible
+  }
+
   function LocationMarker() {
     useMapEvents({
       click(e) {
         setClickedPosition(e.latlng);
-      }
-    })
+      },
+    });
+    return null;
   }
 
   return (
     <>
       <MapContainer
         center={[40.71427, -74.00597]}
-        zoom={100}
+        zoom={13}
+        preferCanvas={true}
         style={{ height: "100vh", width: "100%" }}
       >
         <TileLayer
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; OpenStreetMap contributors'
         />
-        {geoData && <GeoJSON data={geoData} style={getStyle} />}
+        {visibleData && <GeoJSONLayer data={visibleData} style={getStyle} />}
         <LocationMarker />
+        <MapEventHandler />
       </MapContainer>
-      
       {clickedPosition && (
         <div style={{ padding: "10px" }}>
           <h3>Clicked Coordinates:</h3>
