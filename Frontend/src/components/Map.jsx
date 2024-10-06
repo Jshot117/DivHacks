@@ -74,10 +74,10 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery}) => {
 
   const getDisplayDistrictStyle = useCallback(() => {
     return {
-      color: "#0000FF",
-      weight: 2,
+      color: "#00AAFF",
+      weight: 3.5,
       opacity: 1,
-      fillOpacity: 1,
+      fillOpacity: 0.5,
     };
   }, []);
 
