@@ -14,17 +14,16 @@ const getRoute = async (req, res) => {
       .json({ error: "Origin and destination are required" });
   }
 
-  if (!coordinateRegex.test(query.origin)) {
-    const originData = await getCoordinates(origin);
-    const destinationData = await getCoordinates(destination);
+  let originData = origin;
+  let destinationData = destination;
+
+  if (!coordinateRegex.test(origin)) {
+    originData = await getCoordinates(origin);
+    destinationData = await getCoordinates(destination);
 
     if (!originData || !destinationData) {
       return res.status(500).json({ error: "Error fetching coordinates" });
     }
-
-    return res.status(400).json({
-      error: "Origin must be a coordinate in the format 'latitude,longitude'",
-    });
   }
 
   const geoJson = await getGeoJson(
