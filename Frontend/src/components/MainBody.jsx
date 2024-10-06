@@ -13,6 +13,16 @@ const MainBody = () => {
   const [plannedRoute, setPlannedRoute] = useState(undefined);
   const [plannedRouteQuery, setPlannedRouteQuery] = useState(undefined);
 
+
+  const [clickCounter, setClickCounter] = useState(0);
+  // enumeration definition: 
+  //   0: None
+  //   1: Origin
+  //   2: Destination
+  
+  const [origin, setOriginPoint] = useState(null);
+  const [destination, setDestinationPoint] = useState(null);
+  
   return (
     <div className="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900 dark:text-white">
       <div id="main-content" className="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900">
@@ -23,9 +33,9 @@ const MainBody = () => {
                 <MapControls callback={(route, origin, dest) => {
                   setPlannedRoute(route);
                   setPlannedRouteQuery(origin && dest ? (origin + dest) : undefined);
-                }}/>
+                }} origin={origin} setOriginPoint={setOriginPoint} destination={destination} setDestinationPoint={setDestinationPoint} clickCounter={clickCounter} setClickCounter={setClickCounter}/>
                 <div className="my-4 border-gray-200">
-                  <Map inputCallback={setMapInputs} plannedRoute={plannedRoute} plannedRouteQuery={plannedRouteQuery}/>
+                  <Map inputCallback={setMapInputs} plannedRoute={plannedRoute} plannedRouteQuery={plannedRouteQuery} origin={origin} setOriginPoint={setOriginPoint} destination={destination} setDestinationPoint={setDestinationPoint} clickCounter={clickCounter} setClickCounter={setClickCounter}/>
                 </div>
               </MapFrame>
               <DataFrame mapInputs={mapInputs}></DataFrame>

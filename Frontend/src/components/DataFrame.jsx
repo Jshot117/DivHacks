@@ -14,6 +14,20 @@ const DataContainer = (props) => {
   
 };
 
+const DataCouncilCard = (props) => {
+  
+  return (
+    <div className="flex items-center gap-x-6">
+      <img alt="" src={props.imageUrl} className="h-32 rounded-full dark:bg-gray-600 dark:text-white rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500" />
+      <div>
+        <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900 dark:text-white">District Assembler: {props.name}</h3>
+        <p className="text-sm font-semibold leading-6 text-indigo-600">Contact: {props.role}</p>
+      </div>
+    </div>  
+  );
+  
+};
+
 const DataFrame = (props) => {
   const {districtSelected} = props.mapInputs;
 
@@ -21,9 +35,7 @@ const DataFrame = (props) => {
   // https://nyassembly.gov/mem/?ad=085
   let headshot = undefined;
   if (districtSelected !== undefined && districtSelected != 85) {
-    headshot = (
-      <img src={`/council_headshots/district-${districtSelected}.png`}></img>
-    );
+    headshot = (`/council_headshots/district-${districtSelected}.png`);
   }
 
   return (
@@ -34,7 +46,13 @@ const DataFrame = (props) => {
           <span className="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">{props.title || "Data"}:</span>
         </div>
       </div>
-      {headshot}
+      
+      { headshot ? (
+        <DataContainer>
+          <DataCouncilCard imageUrl={headshot} name={"Bob Marley"} role={"+1 (234) 567-8910"}/>
+        </DataContainer>
+      ) : "" }
+      
       <DataContainer>
         <PieChart title="Money Wasted" data={[
           25, 24, 22

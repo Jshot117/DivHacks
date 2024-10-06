@@ -4,11 +4,11 @@ import "leaflet/dist/leaflet.css";
 import { districtAtLocation, districtBoundaries } from "../District";
 import MapEventHandler from "./MapEventHandler"; 
 
-const Map = ({inputCallback, plannedRoute, plannedRouteQuery}) => {
+const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginPoint, destination, setDestinationPoint, clickCounter, setClickCounter}) => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
   const [visibleData, setVisibleData] = useState(null);
-
+  
   const districtSelected = useMemo(
     () =>
       clickedPosition !== null
@@ -88,7 +88,25 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery}) => {
   function LocationMarker() {
     useMapEvents({
       click(e) {
-        setClickedPosition(e.latlng);
+        
+        console.log("Map.jsx[LocationMarker]:", JSON.stringify(e.latlng));
+        
+        if (clickCounter == 1) {
+          setOriginPoint(e.latlng.lat.toString() + "," + e.latlng.lng.toString());
+          // setDestinationPoint(null);
+        } else if (clickCounter == 2) {
+          setDestinationPoint(e.latlng.lat.toString() + "," + e.latlng.lng.toString())
+        } else if (clickCounter == 0) {
+          
+          setClickedPosition(e.latlng);
+          
+        }
+        
+        // setClickCounter((clickCounter + 1) % 2);
+        
+        
+        
+        
       },
     });
     return null;
@@ -120,7 +138,6 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery}) => {
       </MapContainer>
       {clickedPosition && (
         <div style={{ padding: "10px" }}>
-          <h3>Clicked Coordinates:</h3>
           <p>Latitude: {clickedPosition.lat}</p>
           <p>Longitude: {clickedPosition.lng}</p>
           <p>District: {districtSelected}</p>
