@@ -1,10 +1,9 @@
 import { useState } from "react";
 // MapControls.jsx
 
-const MapControls = (props) => {
-  
-  const [origin, setOriginPoint] = useState(null);
-  const [destination, setDestinationPoint] = useState(null);
+const MapControls = ({
+  origin, setOriginPoint, destination, setDestinationPoint, callback, clickCounter, setClickCounter
+}) => {
   
   const getData = async function() {
     
@@ -23,9 +22,9 @@ const MapControls = (props) => {
       const json = await response.json();
       console.log(json);
       
-      if (props.callback) {
+      if (callback) {
         
-        props.callback(json, origin, destination);
+        callback(json, origin, destination);
         
       }
       
@@ -41,7 +40,11 @@ const MapControls = (props) => {
         <div className="sm:col-span-3">
           <label htmlFor="starting-point" className="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Origin</label>
           <div className="">
-            <input type="text" name="starting-point" id="starting-point" autoComplete="given-name" className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={origin} onChange={(e) => {
+            <input type="text" name="starting-point" id="starting-point" autoComplete="given-name" className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={origin} onClick={()=>{
+              
+              setClickCounter(clickCounter == 1 ? 0 : 1);
+              
+            }} onChange={(e) => {
           
               
               setOriginPoint(e.target.value);
@@ -53,7 +56,11 @@ const MapControls = (props) => {
         <div className="sm:col-span-3">
           <label htmlFor="ending-point" className="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Destination</label>
           <div className="">
-            <input type="text" name="ending-point" id="ending-point" autoComplete="family-name" className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={destination} onChange={(e) => {
+            <input type="text" name="ending-point" id="ending-point" autoComplete="family-name" className="block dark:bg-gray-600 dark:text-white w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" defaultValue={destination} onClick={()=>{
+              
+              setClickCounter(clickCounter == 2 ? 0 : 2);
+              
+            }} onChange={(e) => {
           
               
               setDestinationPoint(e.target.value);
