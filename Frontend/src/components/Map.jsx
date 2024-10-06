@@ -47,7 +47,7 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
 
   const getPlannedRouteStyle = useCallback(
     (_feature) => ({
-      color: "#FF00FF",
+      color: "#404040",
       weight: 10,
       opacity: 1,
       fillOpacity: 1,
@@ -64,7 +64,7 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
       case "3":
         return "#00FF00"; // Green for Brooklyn
       case "4":
-        return "#FFFF00"; // Yellow for Queens
+        return "#00AAFF"; // Yellow for Queens
       case "5":
         return "#FF00FF"; // Magenta for Staten Island
       default:
@@ -74,7 +74,8 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
 
   const getDisplayDistrictStyle = useCallback(() => {
     return {
-      color: "#00AAFF",
+      color: "#5c5c5c",
+      fillColor: "#DDDDDD",
       weight: 3.5,
       opacity: 1,
       fillOpacity: 0.5,
@@ -118,10 +119,10 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
         center={[40.71427, -74.00597]}
         zoom={13}
         preferCanvas={true}
-        style={{ height: "100vh", width: "100%" }}
+        style={{ height: "50vh", width: "100%" }}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
         {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
@@ -136,13 +137,6 @@ const Map = ({inputCallback, plannedRoute, plannedRouteQuery, origin, setOriginP
         <LocationMarker />
         <MapEventHandler geoData={geoData} setVisibleData={setVisibleData} />
       </MapContainer>
-      {clickedPosition && (
-        <div style={{ padding: "10px" }}>
-          <p>Latitude: {clickedPosition.lat}</p>
-          <p>Longitude: {clickedPosition.lng}</p>
-          <p>District: {districtSelected}</p>
-        </div>
-      )}
     </>
   );
 };
