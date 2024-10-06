@@ -1,11 +1,25 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo , useCallback } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { districtAtLocation } from "../District";
+import { districtAtLocation, districtBoundaries } from "../District";
 
 const Map = () => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
+  const displayDistrict = useMemo(
+    () =>
+      clickedPosition !== null
+    ? districtAtLocation([clickedPosition.lng, clickedPosition.lat])
+    : undefined,
+    [clickedPosition]
+  );
+  const displayDistrictGeoJSON = useMemo(
+    () =>
+      displayDistrict !== undefined
+    ? districtBoundaries["" + displayDistrict]
+    : undefined,
+    [displayDistrict]
+  );
   const [visibleData, setVisibleData] = useState(null);
 
   useEffect(() => {
@@ -16,10 +30,9 @@ const Map = () => {
         setGeoData(data);
       });
   }, []);
-
-  const getStyle = useCallback(
+  const getBikeLaneStyle = useCallback(
     (feature) => ({
-      color: getColor(feature.properties.boro),
+      color: getBikeRouteColor(feature.properties.boro),
       weight: 2,
       opacity: 1,
       fillOpacity: 0.7,
@@ -27,7 +40,17 @@ const Map = () => {
     []
   );
 
-  const getColor = (boro) => {
+  const getDisplayDistrictStyle = (feature) => {
+    return {
+      color: "#0000FF",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 1,
+    };
+  };
+
+  // Define a function to get color based on a property
+  const getBikeRouteColor = (boro) => {
     switch (boro) {
       case "1":
         return "#FF0000"; // Red for Manhattan
@@ -93,7 +116,6 @@ const Map = () => {
         setClickedPosition(e.latlng);
       },
     });
-    return null;
   }
 
   return (
@@ -105,10 +127,17 @@ const Map = () => {
         style={{ height: "100vh", width: "100%" }}
       >
         <TileLayer
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {visibleData && <GeoJSONLayer data={visibleData} style={getStyle} />}
+        {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
+        {displayDistrictGeoJSON && (
+          <GeoJSON
+            key={displayDistrict}
+            data={displayDistrictGeoJSON}
+            style={getDisplayDistrictStyle}
+          />
+        )}
         <LocationMarker />
         <MapEventHandler />
       </MapContainer>
@@ -117,7 +146,7 @@ const Map = () => {
           <h3>Clicked Coordinates:</h3>
           <p>Latitude: {clickedPosition.lat}</p>
           <p>Longitude: {clickedPosition.lng}</p>
-          <p>District: {districtAtLocation([clickedPosition.lng, clickedPosition.lat])}</p>
+          <p>District: {displayDistrict}</p>
         </div>
       )}
     </>
