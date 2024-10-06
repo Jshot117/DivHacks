@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { districtAtLocation, districtBoundaries } from "../District";
 import MapEventHandler from "./MapEventHandler"; 
 
-const Map = ({inputCallback}) => {
+const Map = ({inputCallback, plannedRoute, plannedRouteQuery}) => {
   const [geoData, setGeoData] = useState(null);
   const [clickedPosition, setClickedPosition] = useState(null);
   const [visibleData, setVisibleData] = useState(null);
@@ -41,6 +41,16 @@ const Map = ({inputCallback}) => {
       weight: 2,
       opacity: 1,
       fillOpacity: 0.7,
+    }),
+    []
+  );
+
+  const getPlannedRouteStyle = useCallback(
+    (_feature) => ({
+      color: "#FF00FF",
+      weight: 10,
+      opacity: 1,
+      fillOpacity: 1,
     }),
     []
   );
@@ -97,6 +107,7 @@ const Map = ({inputCallback}) => {
           attribution="&copy; OpenStreetMap contributors"
         />
         {visibleData && <GeoJSONLayer data={visibleData} style={getBikeLaneStyle} />}
+        {plannedRoute && plannedRoute.route.routes.length && <GeoJSONLayer key={plannedRouteQuery} data={plannedRoute.route.routes[0].geometry} style={getPlannedRouteStyle} />}
         {displayDistrictGeoJSON && (
           <GeoJSON
             key={districtSelected}

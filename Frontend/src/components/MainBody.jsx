@@ -10,6 +10,8 @@ import { useState } from 'react';
 
 const MainBody = () => {
   const [mapInputs, setMapInputs] = useState({districtSelected: undefined});
+  const [plannedRoute, setPlannedRoute] = useState(undefined);
+  const [plannedRouteQuery, setPlannedRouteQuery] = useState(undefined);
 
   return (
     <div className="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900 dark:text-white">
@@ -18,9 +20,12 @@ const MainBody = () => {
           <div className="px-4 pt-6">
             <div className="grid gap-4 l:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
               <MapFrame>
-                <MapControls/>
+                <MapControls callback={(route, origin, dest) => {
+                  setPlannedRoute(route);
+                  setPlannedRouteQuery(origin && dest ? (origin + dest) : undefined);
+                }}/>
                 <div className="my-4 border-gray-200">
-                  <Map inputCallback={setMapInputs}/>
+                  <Map inputCallback={setMapInputs} plannedRoute={plannedRoute} plannedRouteQuery={plannedRouteQuery}/>
                 </div>
               </MapFrame>
               <DataFrame mapInputs={mapInputs}></DataFrame>
