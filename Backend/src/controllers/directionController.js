@@ -15,8 +15,8 @@ const convertToCoordinates = async (location) => {
 };
 
 const getRoute = async (req, res) => {
-  const origin = req.query.origin;
-  const destination = req.query.destination;
+  const origin = decodeURIComponent(req.query.origin);
+  const destination = decodeURIComponent(req.query.destination);
 
   if (!origin || !destination) {
     return res
