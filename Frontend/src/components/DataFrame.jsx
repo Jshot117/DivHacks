@@ -25,10 +25,14 @@ const DataFrame = (props) => {
         </div>
       </div>
       <DataContainer>
-        <PieChart/>
+        <PieChart title="Money Wasted" data={[
+          25, 24, 22
+        ]}/>
       </DataContainer>
       <DataContainer>
-        <AreaChart/>
+        <AreaChart title="Money Saved" data={[
+          25, 24, 22
+        ]}/>
       </DataContainer>
     </div>  
     
